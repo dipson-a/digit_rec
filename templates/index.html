@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{{url_for('static', filename = 'style.css')}}">
+
+    <h1>Handwritten digit recognizer</h1>
+    <p>Made from a simple fully connected neural network with 97.4% accuracy on the mnist dataset.</p>
+    <h2>You can draw a number here.</h2>
+    <div class="canvascontainer"><canvas id="canvas" height="280" width="280">Canvas not supported. Please enable scripts.</canvas></div>
+    <div class="buttoncontainer">
+        <button id="Reset">Reset</button>
+        <button id="Submit">Submit</button>
+    </div>
+    <script src="{{url_for('static', filename = 'script.js')}}"></script>
+</head>
+<body>
+    
+</body>
+</html>
