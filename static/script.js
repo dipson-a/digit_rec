@@ -1,50 +1,45 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
-    let drawing = false;
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let drawing = false;
 
-    canvas.width = 280;
-    canvas.height = 280;
-
-    // Fill the canvas with a white background initially
-    ctx.fillStyle = 'white';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    // Function to start drawing
-    const startDrawing = (e) => {
-        drawing = true;
-        draw(e);
-    };
-
-    // Function to stop drawing
-    const endDrawing = () => {
-        drawing = false;
-        ctx.beginPath();
-    };
-
-    // Function to draw on the canvas
-
-        function draw(event) {
-            if (!drawing) return;
-
-            ctx.lineWidth = 10;
-            ctx.lineCap = 'round';
-            ctx.strokeStyle = 'black';
-
+        function getPointerPosition(event) {
+            const rect = canvas.getBoundingClientRect();
             let x, y;
-            if (event.type.includes('touch')) {
-                const rect = canvas.getBoundingClientRect();
+            if (event.touches && event.touches[0]) {
                 x = event.touches[0].clientX - rect.left;
                 y = event.touches[0].clientY - rect.top;
             } else {
-                x = event.offsetX;
-                y = event.offsetY;
+                x = event.clientX - rect.left;
+                y = event.clientY - rect.top;
             }
+            return { x, y };
+        }
 
+        function startDrawing(event) {
+            drawing = true;
+            const { x, y } = getPointerPosition(event);
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            event.preventDefault();
+        }
+
+        function stopDrawing() {
+            drawing = false;
+            ctx.closePath();
+        }
+
+        function draw(event) {
+            if (!drawing) return;
+            const { x, y } = getPointerPosition(event);
+            ctx.lineWidth = 10;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = 'black';
             ctx.lineTo(x, y);
             ctx.stroke();
             ctx.beginPath();
             ctx.moveTo(x, y);
+            event.preventDefault();
         }
 
         // Mouse events
