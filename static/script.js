@@ -23,28 +23,39 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     // Function to draw on the canvas
-    const draw = (e) => {
-        if (!drawing) return;
 
-        ctx.lineWidth = 5;
-        ctx.lineCap = 'round';
-        ctx.strokeStyle = 'black';
+        function draw(event) {
+            if (!drawing) return;
 
-        const rect = canvas.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
+            ctx.lineWidth = 10;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = 'black';
 
-        ctx.lineTo(x, y);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(x, y);
-    };
+            let x, y;
+            if (event.type.includes('touch')) {
+                const rect = canvas.getBoundingClientRect();
+                x = event.touches[0].clientX - rect.left;
+                y = event.touches[0].clientY - rect.top;
+            } else {
+                x = event.offsetX;
+                y = event.offsetY;
+            }
 
-    // Event listeners for drawing
-    canvas.addEventListener('mousedown', startDrawing);
-    canvas.addEventListener('mouseup', endDrawing);
-    canvas.addEventListener('mousemove', draw);
-    canvas.addEventListener('mouseout', endDrawing);
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+        }
+
+        // Mouse events
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mousemove', draw);
+
+        // Touch events
+        canvas.addEventListener('touchstart', startDrawing);
+        canvas.addEventListener('touchend', stopDrawing);
+        canvas.addEventListener('touchmove', draw);
 
     // Reset button functionality
     document.getElementById('Reset').addEventListener('click', () => {
